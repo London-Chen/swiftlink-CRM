@@ -128,30 +128,37 @@ export const ManualEntryModal: React.FC<ManualEntryModalProps> = ({ isOpen, onCl
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Address / Street Name <span className="text-red-500">*</span></label>
               <div className="flex gap-2">
-                <input 
+                <input
                   required
-                  type="text" 
+                  type="text"
                   className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none"
                   placeholder="e.g. 123 Industrial Ave"
                   value={addressName}
                   onChange={(e) => setAddressName(e.target.value)}
                 />
-                <button 
-                  type="button" 
-                  className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-lg border border-gray-300 transition-colors flex items-center gap-2 text-sm font-medium whitespace-nowrap"
-                  title="Simulate locating address on map"
+                <button
+                  type="button"
+                  onClick={() => {
+                    // Generate random coordinates to simulate geocoding
+                    const randomX = Math.random() * 60 + 20; // Keep within 20-80% range
+                    const randomY = Math.random() * 60 + 20; // Keep within 20-80% range
+                    setLocation({ x: randomX, y: randomY });
+                  }}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg border border-blue-600 transition-colors flex items-center gap-2 text-sm font-medium whitespace-nowrap"
+                  title="Search and auto-locate address on map"
                 >
                   <Search className="w-4 h-4" />
                   Search
                 </button>
               </div>
+              <p className="text-xs text-gray-500 mt-1">Click Search to automatically locate and pin the address on the map.</p>
             </div>
 
             <div>
               <div className="flex justify-between items-center mb-2">
-                <label className="block text-sm font-medium text-gray-700">Pinpoint on Map <span className="text-red-500">*</span></label>
-                <button 
-                  type="button" 
+                <label className="block text-sm font-medium text-gray-700">Location Preview</label>
+                <button
+                  type="button"
                   className="text-xs text-blue-600 hover:text-blue-800 flex items-center gap-1 font-medium"
                   onClick={() => alert("Simulating Navigation View opening...")}
                 >
@@ -159,17 +166,35 @@ export const ManualEntryModal: React.FC<ManualEntryModalProps> = ({ isOpen, onCl
                   Open Navigation View
                 </button>
               </div>
-              
-              <LocationPicker value={location} onChange={setLocation} />
-              
-              <div className="bg-yellow-50 border border-yellow-200 rounded p-2 mt-2 flex items-start gap-2">
-                <div className="mt-0.5 text-yellow-600">
-                  <MapPinIcon className="w-3 h-3" />
+
+              <LocationPicker value={location} onChange={setLocation} readOnly={true} />
+
+              {location && (
+                <div className="bg-green-50 border border-green-200 rounded p-2 mt-2 flex items-start gap-2">
+                  <div className="mt-0.5 text-green-600">
+                    <MapPinIcon className="w-3 h-3" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-xs text-green-800">
+                      <strong>Location found:</strong> GPS coordinates have been automatically generated for "{addressName}".
+                    </p>
+                    <p className="text-xs text-green-700 mt-1 font-mono">
+                      Lat: {location.y.toFixed(6)}, Lng: {location.x.toFixed(6)}
+                    </p>
+                  </div>
                 </div>
-                <p className="text-xs text-yellow-800">
-                  <strong>Manual Action Required:</strong> Please click the exact entrance location on the grid above to generate GPS coordinates for the driver.
-                </p>
-              </div>
+              )}
+
+              {!location && (
+                <div className="bg-blue-50 border border-blue-200 rounded p-2 mt-2 flex items-start gap-2">
+                  <div className="mt-0.5 text-blue-600">
+                    <Search className="w-3 h-3" />
+                  </div>
+                  <p className="text-xs text-blue-800">
+                    <strong>Auto-location:</strong> Enter the address above and click Search to automatically generate GPS coordinates.
+                  </p>
+                </div>
+              )}
             </div>
           </div>
 

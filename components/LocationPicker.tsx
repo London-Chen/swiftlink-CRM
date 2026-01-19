@@ -36,18 +36,34 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({ value, onChange,
 
       {/* The Pin */}
       {value && (
-        <div 
-          className="absolute transform -translate-x-1/2 -translate-y-full transition-all duration-300 ease-out"
-          style={{ left: `${value.x}%`, top: `${value.y}%` }}
-        >
-          <MapPin className="w-8 h-8 text-red-500 fill-red-500 drop-shadow-md" />
-          <div className="w-2 h-1 bg-black/20 rounded-full mx-auto mt-[-2px] blur-[1px]"></div>
-        </div>
+        <>
+          <div
+            className="absolute transform -translate-x-1/2 -translate-y-full transition-all duration-300 ease-out"
+            style={{ left: `${value.x}%`, top: `${value.y}%` }}
+          >
+            <MapPin className="w-8 h-8 text-blue-600 fill-blue-600 drop-shadow-md" />
+            <div className="w-2 h-1 bg-black/20 rounded-full mx-auto mt-[-2px] blur-[1px]"></div>
+          </div>
+
+          {/* Coordinate tooltip */}
+          <div
+            className="absolute transform -translate-x-1/2 translate-y-2 bg-gray-900/90 text-white text-xs px-2 py-1 rounded whitespace-nowrap font-mono"
+            style={{ left: `${value.x}%`, top: `${value.y}%` }}
+          >
+            {value.x.toFixed(4)}, {value.y.toFixed(4)}
+          </div>
+        </>
       )}
-      
+
       {!value && !readOnly && (
         <div className="absolute inset-0 flex items-center justify-center text-gray-400 pointer-events-none">
           <span className="text-sm">Click to select location</span>
+        </div>
+      )}
+
+      {!value && readOnly && (
+        <div className="absolute inset-0 flex items-center justify-center text-gray-400 pointer-events-none">
+          <span className="text-sm">No location selected yet</span>
         </div>
       )}
     </div>
